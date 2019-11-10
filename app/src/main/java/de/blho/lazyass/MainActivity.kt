@@ -6,17 +6,14 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.net.ConnectivityManager
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import android.widget.EditText
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import androidx.core.app.ComponentActivity.ExtraData
-import androidx.core.content.ContextCompat.getSystemService
-import android.icu.lang.UCharacter.GraphemeClusterBreak.T
-
+import kotlinx.android.synthetic.main.activity_main.view.*
 
 
 const val CHANNEL_ID="10001";
@@ -24,6 +21,10 @@ const val default_notification_channel_id = "default"
 
 class MainActivity : AppCompatActivity() {
     var notificationId=0
+
+    val br: BroadcastReceiver = UnlockBroadcastReceiver()
+    var registerd=false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -31,12 +32,26 @@ class MainActivity : AppCompatActivity() {
 
     fun onClick(view: View){
         createNotificationChannel()
-        shownotification()
-        registerUnlockReceiver()
+       // shownotification()
+        registerUnblockReceiver()
     }
 
-    private fun registerUnlockReceiver() {
-        val br: BroadcastReceiver = UnlockBroadcastReceiver()
+    fun unRegister(){
+        if(registerd) {
+            unregisterReceiver(br)
+            registerd=false
+        }
+    }
+    fun unRegister(view: View){
+        unRegister()
+    }
+
+    private fun registerUnblockReceiver() {
+        unRegister()
+        val editText:String = findViewById<EditText>(R.id.editText).editText.text.toString()
+        val timeInMillis =  editText.toInt()*1000
+        UnlockBroadcastReceiver.screenTimeToNotification=timeInMillis
+        registerd=true
         val filter = IntentFilter(Intent.ACTION_SCREEN_OFF).apply {
             addAction(Intent.ACTION_USER_PRESENT)
         }

@@ -43,7 +43,7 @@ class Notifier : BroadcastReceiver() {
             .setContentText("Time to do stuff")
             .setStyle(
                 NotificationCompat.BigTextStyle()
-                    .bigText("You sat on your lazy ass enough..")
+                    .bigText("You sat on your lazy ass long enough..")
             )
             .setPriority(NotificationCompat.PRIORITY_MAX)
 

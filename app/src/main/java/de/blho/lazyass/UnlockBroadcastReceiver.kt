@@ -18,6 +18,10 @@ import android.app.PendingIntent
 
 
 class UnlockBroadcastReceiver : BroadcastReceiver() {
+    companion object {
+        var screenTimeToNotification: Int =60000
+    }
+
     private  var notifficactionId=0
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onReceive(context: Context, intent: Intent) {
@@ -76,7 +80,7 @@ class UnlockBroadcastReceiver : BroadcastReceiver() {
 
 
 
-        val futureInMillis = SystemClock.elapsedRealtime() + 5000//1 sekunde in zukunft
+        val futureInMillis = SystemClock.elapsedRealtime() + screenTimeToNotification//1 sekunde in zukunft
         alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, futureInMillis,pendingIntent)
     }
 
