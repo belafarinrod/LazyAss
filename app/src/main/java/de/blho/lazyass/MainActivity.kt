@@ -11,18 +11,15 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.EditText
-import androidx.core.app.NotificationCompat
-import androidx.core.app.NotificationManagerCompat
 import kotlinx.android.synthetic.main.activity_main.view.*
 
 
-const val CHANNEL_ID="10001";
-const val default_notification_channel_id = "default"
+const val CHANNEL_ID="10001"
 
 class MainActivity : AppCompatActivity() {
-    var notificationId=0
+    //var notificationId=0
 
-    val br: BroadcastReceiver = UnlockBroadcastReceiver()
+    private val br: BroadcastReceiver = UnlockBroadcastReceiver()
     var registerd=false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,11 +29,10 @@ class MainActivity : AppCompatActivity() {
 
     fun onClick(view: View){
         createNotificationChannel()
-       // shownotification()
         registerUnblockReceiver()
     }
 
-    fun unRegister(){
+    private fun unRegister(){
         if(registerd) {
             unregisterReceiver(br)
             registerd=false
@@ -56,22 +52,6 @@ class MainActivity : AppCompatActivity() {
             addAction(Intent.ACTION_USER_PRESENT)
         }
         registerReceiver(br, filter)
-    }
-
-    private fun shownotification() {
-        var builder = NotificationCompat.Builder(this, CHANNEL_ID)
-            .setSmallIcon(R.drawable.lazy)
-            .setContentTitle("My notification")
-            .setContentText("Notification from button")
-            .setStyle(
-                NotificationCompat.BigTextStyle()
-                    .bigText("Longeeeeeeeeeer Notification from button  ............")
-            )
-            .setPriority(NotificationCompat.PRIORITY_MAX)
-        with(NotificationManagerCompat.from(this)) {
-            // notificationId is a unique int for each notification that you must define
-            notify(notificationId++, builder.build())
-        }
     }
 
     private fun createNotificationChannel() {
