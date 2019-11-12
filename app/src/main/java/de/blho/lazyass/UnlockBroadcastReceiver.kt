@@ -59,7 +59,7 @@ class UnlockBroadcastReceiver : BroadcastReceiver() {
 
         val alarmManager: AlarmManager = context.getSystemService(AlarmManager::class.java)!!
         val futureInMillis = SystemClock.elapsedRealtime() + screenTimeToNotification
-        alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, futureInMillis,pendingIntent)
+        alarmManager.setExact(AlarmManager.ELAPSED_REALTIME_WAKEUP, futureInMillis,pendingIntent)
     }
 
     private fun createPendingIntent(

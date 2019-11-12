@@ -14,11 +14,18 @@ App to show Notifications after X Seconds, after u unlocked your phone the last 
 - Write Unit/Integration/UI tests
   - UI Tests: 
     - set time, lock,unlock,expect notification
-    - set time, lock,unock,lock, wait, expect no notification(tests the cancel operation)
+    - set time, lock,unock,lock, wait, expect no notification(tests the cancel operation of alarmmanager)
 - Clean up the rest
 - Change from input field to sth that only provides Integers
 - add minutes/hours
+- remove data from acticies and recievers, as https://developer.android.com/jetpack/docs/guide suggests
 
 
 ## Architecture Overview/How to Conribute
 - TODO
+
+# Changelog
+## v0.1
+## v0.2
+- fixes bug, that causes notifications to appear on locked screens when the phone is unlocked and locked before the next notification was scheuled
+- notifications are scheduled by alammanager#setExact instead of set, so the notification cannot be rescheduled later by the OS
