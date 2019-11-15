@@ -11,25 +11,57 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.EditText
+import android.widget.TextView
+import androidx.core.os.ConfigurationCompat
+import androidx.lifecycle.Observer
 import kotlinx.android.synthetic.main.activity_main.view.*
+import java.text.SimpleDateFormat
+import java.util.*
 
 
 const val CHANNEL_ID="10001"
 
 class MainActivity : AppCompatActivity() {
-    //var notificationId=0
-
     private val br: BroadcastReceiver = UnlockBroadcastReceiver()
     var registerd=false
+    private val nextAlarmTime=-1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        val nextNotificationTimeObserver = Observer<Long> { newNotificationTime->
+            // Update the UI, in this case, a TextView.
+           updateNextAlarmTime(newNotificationTime)
+        }
+
+        RepositoryFake.timeForNextAlarm.observe(this,nextNotificationTimeObserver)
     }
+
+    override fun onStart() {
+        super.onStart()
+        updateNextAlarmTime(RepositoryFake.timeForNextAlarm.value?:-1)
+    }
+
 
     fun onClick(view: View){
         createNotificationChannel()
         registerUnblockReceiver()
+    }
+
+    private fun updateNextAlarmTime(newNotificationTime: Long) {
+        var nextAlarmInMillisString:String=findNextAlarm(newNotificationTime)
+        findViewById<TextView>(R.id.textView).text=nextAlarmInMillisString
+
+
+    }
+
+    private fun findNextAlarm(newNotificationTime: Long):String {
+        return if(newNotificationTime<0){
+            "No Pending Notification"
+        }else{
+            val currentLocale = ConfigurationCompat.getLocales(resources.configuration)[0]
+            SimpleDateFormat("HH:mm:ss", currentLocale).format(newNotificationTime).toString()
+        }
     }
 
     private fun unRegister(){

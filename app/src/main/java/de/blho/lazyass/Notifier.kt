@@ -22,6 +22,7 @@ class Notifier : BroadcastReceiver() {
         // and https://stackoverflow.com/questions/18000093/how-to-marshall-and-unmarshall-a-parcelable-to-a-byte-array-with-help-of-parcel/18000094#18000094
         //so we need to create the Notification here instead of putting it in the intent as extra
         notificationManager.notify(notificationId++, createNotification(context))
+        RepositoryFake.timeForNextAlarm.postValue( -1)
     }
 
     private fun createNotificationChannel(context: Context): NotificationManager {

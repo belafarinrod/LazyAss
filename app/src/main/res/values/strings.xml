@@ -20,4 +20,5 @@
     <string name="button_register">Set Notification Time(in secs)</string>
     <string name="button_unregister">stop annoying me</string>
     <string name="timeInput">60</string>
+    <string name="nextNotification">next notification:</string>
 </resources>
