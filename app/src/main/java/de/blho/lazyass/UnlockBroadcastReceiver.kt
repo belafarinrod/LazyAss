@@ -35,6 +35,7 @@ class UnlockBroadcastReceiver : BroadcastReceiver() {
           }
         } else if (intent.action == Intent.ACTION_SCREEN_OFF) {
             cancelScheduledAlarms(context)
+            RepositoryFake.timeForNextAlarm.postValue(-1)
         }
     }
 
@@ -69,6 +70,7 @@ class UnlockBroadcastReceiver : BroadcastReceiver() {
         val alarmManager: AlarmManager = context.getSystemService(AlarmManager::class.java)!!
         val futureInMillis = SystemClock.elapsedRealtime() + screenTimeToNotification
         alarmManager.setExact(AlarmManager.ELAPSED_REALTIME_WAKEUP, futureInMillis,pendingIntent)
+        RepositoryFake.timeForNextAlarm.postValue(screenTimeToNotification+System.currentTimeMillis())
     }
 
     private fun createPendingIntent(
