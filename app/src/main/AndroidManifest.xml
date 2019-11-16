@@ -28,6 +28,10 @@
             </intent-filter>
         </receiver>
         <receiver android:name=".Notifier" > </receiver>
+
     </application>
+
+
+
 
 </manifest>
