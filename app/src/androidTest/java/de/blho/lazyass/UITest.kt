@@ -111,7 +111,7 @@ class UITest {
 
     }
 
-    @Ignore("not implemented yet")
+
     @Test
     fun notificationsWhichAppearWhenScreenIsLockedShouldBeRemovedOnUnlock(){
         clearNotifications()
