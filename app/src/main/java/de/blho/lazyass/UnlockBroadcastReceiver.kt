@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.app.KeyguardManager
+import android.app.NotificationManager
 import android.os.Build
 import android.os.SystemClock
 import androidx.annotation.RequiresApi
@@ -29,11 +30,19 @@ class UnlockBroadcastReceiver : BroadcastReceiver() {
 
         if (intent.action == Intent.ACTION_USER_PRESENT) {
           if (!isPhoneLocked(context)) {
+              cancelCurrentNotifications(context)
               scheduleNotification(context)
           }
         } else if (intent.action == Intent.ACTION_SCREEN_OFF) {
             cancelScheduledAlarms(context)
         }
+    }
+
+    private fun cancelCurrentNotifications(context: Context) {
+        //FIXME do not mix broadcaster and notification logic
+        val notificationManager =
+            context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.cancelAll()
     }
 
     @RequiresApi(Build.VERSION_CODES.M)
