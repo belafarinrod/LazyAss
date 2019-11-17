@@ -1,8 +1,6 @@
 package de.blho.lazyass
 
 
-import android.view.View
-import android.view.ViewGroup
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.accessibility.AccessibilityChecks
 import androidx.test.espresso.action.ViewActions.*
@@ -15,11 +13,7 @@ import androidx.test.uiautomator.By
 import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.UiObject2
 import androidx.test.uiautomator.Until
-import org.hamcrest.Description
-import org.hamcrest.Matcher
-import org.hamcrest.Matchers.*
 
-import org.hamcrest.TypeSafeMatcher
 import org.junit.*
 import org.junit.Assert.*
 import org.junit.runner.RunWith
@@ -54,10 +48,10 @@ class UITest {
     fun timedNotificationsShouldAppear() {
 
         clearNotifications()
-        val appCompatEditText = onView(withId(R.id.editText))
+        val appCompatEditText = onView(withId(R.id.waitTimeInput))
         appCompatEditText.perform(replaceText("2"))
 
-        val appCompatButton = onView(withId(R.id.button))
+        val appCompatButton = onView(withId(R.id.setNotificationButton))
         appCompatButton.perform(click())
 
         val uiDevice = UiDevice.getInstance(getInstrumentation())
@@ -76,10 +70,10 @@ class UITest {
         clearNotifications()
 
 
-        val appCompatEditText = onView(withId(R.id.editText))
+        val appCompatEditText = onView(withId(R.id.waitTimeInput))
         appCompatEditText.perform(replaceText("4"))
 
-        val appCompatButton = onView(withId(R.id.button))
+        val appCompatButton = onView(withId(R.id.setNotificationButton))
         appCompatButton.perform(click())
 
 
@@ -117,10 +111,10 @@ class UITest {
         clearNotifications()
 
 
-        val appCompatEditText = onView(withId(R.id.editText))
+        val appCompatEditText = onView(withId(R.id.waitTimeInput))
         appCompatEditText.perform(replaceText("4"))
 
-        val appCompatButton = onView(withId(R.id.button))
+        val appCompatButton = onView(withId(R.id.setNotificationButton))
         appCompatButton.perform(click())
 
 

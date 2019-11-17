@@ -44,7 +44,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun registerUnblockReceiver() {
         unRegister()
-        val editText:String = findViewById<EditText>(R.id.editText).editText.text.toString()
+        val editText:String = findViewById<EditText>(R.id.waitTimeInput).waitTimeInput.text.toString()
         val timeInMillis =  editText.toInt()*1000
         UnlockBroadcastReceiver.screenTimeToNotification=timeInMillis
         registerd=true
