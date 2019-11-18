@@ -31,3 +31,5 @@ App to show Notifications after X Seconds, after u unlocked your phone the last 
 - notifications are scheduled by alammanager#setExact instead of set, so the notification cannot be rescheduled later by the OS
 ## v0.3
 - add feature to remove existing notifications when unlocking the phone
+## v0.4
+adds field for the next notification time 
