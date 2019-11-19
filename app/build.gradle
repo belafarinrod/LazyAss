@@ -26,6 +26,9 @@ android {
             includeAndroidResources = true
         }
     }
+    dataBinding {
+        enabled = true
+    }
     useLibrary 'android.test.runner'
 
     useLibrary 'android.test.base'
