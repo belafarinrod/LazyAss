@@ -9,77 +9,115 @@ import android.content.IntentFilter
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.view.View
 import android.widget.EditText
 import android.widget.TextView
 import androidx.core.os.ConfigurationCompat
+import androidx.databinding.DataBindingUtil
+import androidx.databinding.ObservableBoolean
 import androidx.lifecycle.Observer
+import de.blho.lazyass.databinding.ActivityMainBinding
 import kotlinx.android.synthetic.main.activity_main.view.*
 import java.text.SimpleDateFormat
-import java.util.*
+import androidx.databinding.adapters.TextViewBindingAdapter.setText
 
 
-const val CHANNEL_ID="10001"
+
+
+const val CHANNEL_ID = "10001"
 
 class MainActivity : AppCompatActivity() {
     private val br: BroadcastReceiver = UnlockBroadcastReceiver()
-    var registerd=false
-    private val nextAlarmTime=-1
+    var registerd: ObservableBoolean = ObservableBoolean(false)
+    private val nextAlarmTime = -1
+    private var countDownTimer: CountDownTimer? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        val nextNotificationTimeObserver = Observer<Long> { newNotificationTime->
-            // Update the UI, in this case, a TextView.
-           updateNextAlarmTime(newNotificationTime)
-        }
+        val binding: ActivityMainBinding = DataBindingUtil.setContentView(
+            this, R.layout.activity_main
+        )
+        binding.registered = registerd
 
-        RepositoryFake.timeForNextAlarm.observe(this,nextNotificationTimeObserver)
+        val nextNotificationTimeObserver = Observer<Long> { newNotificationTime ->
+            // Update the UI, in this case, a TextView.
+            updateNextAlarmTime(newNotificationTime)
+            startCountdownTimer(newNotificationTime)
+        }
+        RepositoryFake.timeForNextAlarm.observe(this, nextNotificationTimeObserver)
+    }
+
+    private fun startCountdownTimer(newNotificationTime: Long) {
+        countDownTimer?.cancel()
+        countDownTimer  = object : CountDownTimer(newNotificationTime- System.currentTimeMillis(), 1000) {
+
+            override fun onTick(millisUntilFinished: Long) {
+                findViewById<TextView>(R.id.countdownField).text = ( millisUntilFinished / 1000).toString()
+            }
+
+            override fun onFinish() {
+                findViewById<TextView>(R.id.countdownField).text="0"
+            }
+        }.start()
+
+
     }
 
     override fun onStart() {
         super.onStart()
-        updateNextAlarmTime(RepositoryFake.timeForNextAlarm.value?:-1)
+        updateNextAlarmTime(RepositoryFake.timeForNextAlarm.value ?: -1)
+     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+       // countDownTimer?.cancel()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        //countDownTimer?.cancel()
     }
 
 
-    fun onClick(view: View){
+    fun onClick(view: View) {
         createNotificationChannel()
         registerUnblockReceiver()
     }
 
     private fun updateNextAlarmTime(newNotificationTime: Long) {
-        var nextAlarmInMillisString:String=findNextAlarm(newNotificationTime)
-        findViewById<TextView>(R.id.textView).text=nextAlarmInMillisString
-
-
+        var nextAlarmInMillisString: String = findNextAlarm(newNotificationTime)
+        findViewById<TextView>(R.id.textView).text = nextAlarmInMillisString
     }
 
-    private fun findNextAlarm(newNotificationTime: Long):String {
-        return if(newNotificationTime<0){
+    private fun findNextAlarm(newNotificationTime: Long): String {
+        return if (newNotificationTime < 0) {
             "No Pending Notification"
-        }else{
+        } else {
             val currentLocale = ConfigurationCompat.getLocales(resources.configuration)[0]
             SimpleDateFormat("HH:mm:ss", currentLocale).format(newNotificationTime).toString()
         }
     }
 
-    private fun unRegister(){
-        if(registerd) {
+    private fun unRegister() {
+        if (registerd.get()) {
             unregisterReceiver(br)
-            registerd=false
+            registerd.set(false)
         }
     }
-    fun unRegister(view: View){
+
+    fun unRegister(view: View) {
         unRegister()
     }
 
     private fun registerUnblockReceiver() {
         unRegister()
-        val editText:String = findViewById<EditText>(R.id.waitTimeInput).waitTimeInput.text.toString()
-        val timeInMillis =  editText.toInt()*1000
-        UnlockBroadcastReceiver.screenTimeToNotification=timeInMillis
-        registerd=true
+        val editText: String =
+            findViewById<EditText>(R.id.waitTimeInput).waitTimeInput.text.toString()
+        val timeInMillis = editText.toInt() * 1000
+        UnlockBroadcastReceiver.screenTimeToNotification = timeInMillis
+        registerd.set(true)
         val filter = IntentFilter(Intent.ACTION_SCREEN_OFF).apply {
             addAction(Intent.ACTION_USER_PRESENT)
         }

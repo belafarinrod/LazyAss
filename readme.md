@@ -32,4 +32,6 @@ App to show Notifications after X Seconds, after u unlocked your phone the last 
 ## v0.3
 - add feature to remove existing notifications when unlocking the phone
 ## v0.4
-adds field for the next notification time 
+- adds field for the next notification time
+## v0.5
+- adds countdown to next notification and binding for isRegistered Field

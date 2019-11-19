@@ -21,4 +21,5 @@
     <string name="button_unregister">stop annoying me</string>
     <string name="timeInput">60</string>
     <string name="nextNotification">next notification:</string>
+    <string name="countdowntext">0 s</string>
 </resources>
