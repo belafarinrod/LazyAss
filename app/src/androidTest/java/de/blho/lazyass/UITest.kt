@@ -57,7 +57,7 @@ class UITest {
         val uiDevice = UiDevice.getInstance(getInstrumentation())
         restartScreenWith1SecondBreak(uiDevice)
         uiDevice.openNotification()
-        uiDevice.wait(Until.hasObject(By.text(NOTIFICATION_TITLE)), 5000)
+        uiDevice.wait(Until.hasObject(By.text(NOTIFICATION_TITLE)), 15000)
         var notificationTitleUIElement: UiObject2? =
             uiDevice.findObject(By.text(NOTIFICATION_TITLE))
         assertNotNull("no notification found", notificationTitleUIElement)
